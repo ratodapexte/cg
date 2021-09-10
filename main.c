@@ -436,7 +436,7 @@ void display()
     gluLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, u.x, u.y, u.z);
     setup_lighting();
 
-    draw_grid(25);
+    draw_grid(50);
 
     int i;
     // Draw the main door
@@ -507,25 +507,30 @@ void display()
     glBegin(GL_TRIANGLES);
     for(i = 0; i < ROOM_VERTEX_COUNT; i++)
     {
-        glNormal3f(ROOM_NORMALS[i].x * 3, ROOM_NORMALS[i].y, ROOM_NORMALS[i].z);
-        glTexCoord2f(ROOM_TEX_COORDS[i].x * 3, ROOM_TEX_COORDS[i].y);
-        glVertex3f(ROOM_VERTICES[i].x * 3, ROOM_VERTICES[i].y, ROOM_VERTICES[i].z);
+        glNormal3f(ROOM_NORMALS[i].x , ROOM_NORMALS[i].y, ROOM_NORMALS[i].z);
+        glTexCoord2f(ROOM_TEX_COORDS[i].x, ROOM_TEX_COORDS[i].y);
+        glVertex3f(ROOM_VERTICES[i].x, ROOM_VERTICES[i].y, ROOM_VERTICES[i].z);
     }
     glEnd();
     
     // Draw the mesa
+    
+    glPushMatrix();
+    glTranslatef(1, 0.5, 0);
     glBegin(GL_TRIANGLES);
     for(i = 0; i < MESA_VERTEX_COUNT; i++)
     {
-        glNormal3f(MESA_NORMALS[i].x, MESA_NORMALS[i].y, MESA_NORMALS[i].z);
-        glTexCoord2f(MESA_TEX_COORDS[i].x, MESA_TEX_COORDS[i].y);
-        glVertex3f(MESA_VERTICES[i].x, MESA_VERTICES[i].y, MESA_VERTICES[i].z);
+        glNormal3f(MESA_NORMALS[i].x*0.5, MESA_NORMALS[i].y, MESA_NORMALS[i].z);
+        glTexCoord2f(MESA_TEX_COORDS[i].x *0.5, MESA_TEX_COORDS[i].y);
+        glVertex3f(MESA_VERTICES[i].x*0.5, MESA_VERTICES[i].y, MESA_VERTICES[i].z);
     }
     glEnd();
-
-    // Draw the chair
+    glPopMatrix();
+    
+    // Draw the chair in front of the door
+    glPushMatrix();
+    glTranslatef(1, 0.5, -3);
     glBegin(GL_TRIANGLES);
-    glTranslatef(14.902783, 3.648618, -1.792326);
     for(i = 0; i < CHAIR_VERTEX_COUNT; i++)
     {
         glNormal3f(CHAIR_NORMALS[i].x * 10, CHAIR_NORMALS[i].y, CHAIR_NORMALS[i].z);
@@ -533,6 +538,36 @@ void display()
         glVertex3f(CHAIR_VERTICES[i].x, CHAIR_VERTICES[i].y, CHAIR_VERTICES[i].z);
     }
     glEnd();
+    glPopMatrix();
+
+    // Draw the middle chair 
+    glPushMatrix();
+    glRotatef(-90, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0, 0, -3.5);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < CHAIR_VERTEX_COUNT; i++)
+    {
+        glNormal3f(CHAIR_NORMALS[i].x * 10, CHAIR_NORMALS[i].y, CHAIR_NORMALS[i].z);
+        glTexCoord2f(CHAIR_TEX_COORDS[i].x * 10, CHAIR_TEX_COORDS[i].y * 10);
+        glVertex3f(CHAIR_VERTICES[i].x, CHAIR_VERTICES[i].y, CHAIR_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the chair next to the door
+    glPushMatrix();
+    glRotatef(180, 0.0f, 1.0f, 0.0f);
+    glTranslatef(-1, 0.5, -3);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < CHAIR_VERTEX_COUNT; i++)
+    {
+        glNormal3f(CHAIR_NORMALS[i].x * 10, CHAIR_NORMALS[i].y, CHAIR_NORMALS[i].z);
+        glTexCoord2f(CHAIR_TEX_COORDS[i].x * 10, CHAIR_TEX_COORDS[i].y * 10);
+        glVertex3f(CHAIR_VERTICES[i].x, CHAIR_VERTICES[i].y, CHAIR_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
 
     glutSwapBuffers();
 }
