@@ -36,4 +36,5 @@ Em seguida, executar o main.exe.
 ### Referências
 
 * <http://www.glprogramming.com/red/chapter05.html>
-
+* <https://github.com/EduardoLisboa/Projeto_CG>
+* <https://raw.githubusercontent.com/valeriojr/monitoria-cg/master/material/book.pdf>
