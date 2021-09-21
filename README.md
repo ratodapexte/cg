@@ -2,13 +2,16 @@
 
 Alunos:
 * [Victor Hugo de Lima Araujo](https://github.com/ratodapexte)
-* [Jonas](https://github.com/)
+* [Jonas Santos de Almeida Alves](https://github.com/joninhasmcz)
 
 A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando no cmd ou powershell do Windows dentro da pasta onde se encontra o main.c:
 ~~~
 gcc main.c -o main.exe -I"C:\MinGW\freeglut\include" -L"C:\MinGW\freeglut\lib" -lfreeglut -lopengl32 -lglu32
 ~~~
 Em seguida, executar o main.exe.
+
+### Vídeo youtube
+- <https://www.youtube.com/watch?v=s_spXDzFhsA>
 
 ### Implementações
 - [X] Cozinha
