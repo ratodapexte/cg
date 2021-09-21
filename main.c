@@ -52,7 +52,7 @@ Vec2 MOTION;
 /*-------------------------------------------*/
 #define MAX_VERTICES 60000
 
-// Object 2
+// Object 1
 unsigned int doors_tex_id;
 int main_door_angle = 0;
 int open_main_door = -1;
@@ -61,7 +61,7 @@ Vec3 DOOR_VERTICES[MAX_VERTICES];
 Vec3 DOOR_NORMALS[MAX_VERTICES];
 Vec2 DOOR_TEX_COORDS[MAX_VERTICES];
 
-// Object 3
+// Object 2
 int side_door_angle = 0;
 int open_side_door = -1;
 int SECONDARY_DOOR_VERTEX_COUNT;
@@ -69,14 +69,14 @@ Vec3 SECONDARY_DOOR_VERTICES[MAX_VERTICES];
 Vec3 SECONDARY_DOOR_NORMALS[MAX_VERTICES];
 Vec2 SECONDARY_DOOR_TEX_COORDS[MAX_VERTICES];
 
-// Object 4
+// Object 3
 unsigned int chair_tex_id;
 int CHAIR_VERTEX_COUNT;
 Vec3 CHAIR_VERTICES[MAX_VERTICES];
 Vec3 CHAIR_NORMALS[MAX_VERTICES];
 Vec2 CHAIR_TEX_COORDS[MAX_VERTICES];
 
-// Object 5
+// Object 4
 unsigned int windows_tex_id;
 int open_windows = -1;
 int window_angle = 0;
@@ -85,25 +85,68 @@ Vec3 LEFT_WINDOW_VERTICES[MAX_VERTICES];
 Vec3 LEFT_WINDOW_NORMALS[MAX_VERTICES];
 Vec2 LEFT_WINDOW_TEX_COORDS[MAX_VERTICES];
 
-// Object 6
+// Object 5
 int RIGHT_WINDOW_VERTEX_COUNT;
 Vec3 RIGHT_WINDOW_VERTICES[MAX_VERTICES];
 Vec3 RIGHT_WINDOW_NORMALS[MAX_VERTICES];
 Vec2 RIGHT_WINDOW_TEX_COORDS[MAX_VERTICES];
 
-// Object 17
-int ROOM_VERTEX_COUNT;
-Vec3 ROOM_VERTICES[MAX_VERTICES];
-Vec3 ROOM_NORMALS[MAX_VERTICES];
-Vec2 ROOM_TEX_COORDS[MAX_VERTICES];
+// Object 6
+unsigned int floor_tex_id;
+int FLOOR_VERTEX_COUNT;
+Vec3 FLOOR_VERTICES[MAX_VERTICES];
+Vec3 FLOOR_NORMALS[MAX_VERTICES];
+Vec2 FLOOR_TEX_COORDS[MAX_VERTICES];
 
-// Object 25
+// Object 7
 unsigned int mesa_tex_id;
 int MESA_VERTEX_COUNT;
 Vec3 MESA_VERTICES[MAX_VERTICES];
 Vec3 MESA_NORMALS[MAX_VERTICES];
 Vec2 MESA_TEX_COORDS[MAX_VERTICES];
 
+// Object 8
+unsigned int freezer_tex_id;
+int FREEZER_VERTEX_COUNT;
+Vec3 FREEZER_VERTICES[MAX_VERTICES];
+Vec3 FREEZER_NORMALS[MAX_VERTICES];
+Vec2 FREEZER_TEX_COORDS[MAX_VERTICES];
+
+// Object 9
+unsigned int mug_tex_id;
+int MUG_VERTEX_COUNT;
+Vec3 MUG_VERTICES[MAX_VERTICES];
+Vec3 MUG_NORMALS[MAX_VERTICES];
+Vec2 MUG_TEX_COORDS[MAX_VERTICES];
+
+// Object 10
+unsigned int plate_tex_id;
+int PLATE_VERTEX_COUNT;
+Vec3 PLATE_VERTICES[MAX_VERTICES];
+Vec3 PLATE_NORMALS[MAX_VERTICES];
+Vec2 PLATE_TEX_COORDS[MAX_VERTICES];
+
+// Object 11
+unsigned int fan_tex_id;
+int fan_speed = 1;
+int FAN_VERTEX_COUNT;
+Vec3 FAN_VERTICES[MAX_VERTICES];
+Vec3 FAN_NORMALS[MAX_VERTICES];
+Vec2 FAN_TEX_COORDS[MAX_VERTICES];
+
+// Object 12
+unsigned int painting_tex_id;
+int PAINTING_VERTEX_COUNT;
+Vec3 PAINTING_VERTICES[MAX_VERTICES];
+Vec3 PAINTING_NORMALS[MAX_VERTICES];
+Vec2 PAINTING_TEX_COORDS[MAX_VERTICES];
+
+// Object 13
+unsigned int walls_tex_id;
+int WALLS_VERTEX_COUNT;
+Vec3 WALLS_VERTICES[MAX_VERTICES];
+Vec3 WALLS_NORMALS[MAX_VERTICES];
+Vec2 WALLS_TEX_COORDS[MAX_VERTICES];
 
 /*---------------------------------------------*/
 /*-------------- SETUP FUNCTIONS --------------*/
@@ -134,7 +177,7 @@ void draw_grid(int n);
 void main_door();
 void side_door();
 void windows();
-// void move_fan();
+void move_fan();
 
 
 /*--------------------------------------------*/
@@ -196,7 +239,7 @@ void init_gl()
 
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_TEXTURE_2D);
-    // setup_lighting();
+    setup_lighting();
 }
 
 void setup_lighting()
@@ -214,12 +257,12 @@ void setup_lighting()
     float light_specular[] = {0.0f, 1.0f, 0.0f, 1.0f};
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 
-    float light_spot_direction[] = {1.0f, 0.0f, 0.0f};
-    float light_spot_diffuse[] = {1.0f, 0.0f, 1.0f};
-    float light_spot_position[] = {-1.3f, 4.342580f, -0.310794f, 1.0f};
+    float light_spot_direction[] = {2.17f, 7.24f, 109.0f};
+    float light_spot_diffuse[] = {255.0f, 255.0f, 0.0f};
+    float light_spot_position[] = {4.0763f, 1.0055f, 5.9039f, 1.0f};
     glLightfv(GL_LIGHT1, GL_POSITION, light_spot_position);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light_spot_diffuse);
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 25.0f);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light_spot_direction);
 
     glEnable(GL_LIGHTING);
@@ -278,54 +321,92 @@ int load_obj(const char* path, int object)
             int i;
             for(i = 0; i < 3; i++)
             {
-                if(object == 2) // Main door
+                if(object == 1) // Main door
                 {
                     DOOR_VERTICES[DOOR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     DOOR_TEX_COORDS[DOOR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     DOOR_NORMALS[DOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     DOOR_VERTEX_COUNT++;
                 }
-                else if(object == 3) // Secondary door
+                else if(object == 2) // Secondary door
                 {
                     SECONDARY_DOOR_VERTICES[SECONDARY_DOOR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     SECONDARY_DOOR_TEX_COORDS[SECONDARY_DOOR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     SECONDARY_DOOR_NORMALS[SECONDARY_DOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     SECONDARY_DOOR_VERTEX_COUNT++;
                 }
-                else if(object == 4) // Mesa
+                else if(object == 3) // Mesa
                 {
                     CHAIR_VERTICES[CHAIR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     CHAIR_TEX_COORDS[CHAIR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     CHAIR_NORMALS[CHAIR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     CHAIR_VERTEX_COUNT++;
                 }
-                else if(object == 5) // Left window
+                else if(object == 4) // Left window
                 {
                     LEFT_WINDOW_VERTICES[LEFT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     LEFT_WINDOW_TEX_COORDS[LEFT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     LEFT_WINDOW_NORMALS[LEFT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     LEFT_WINDOW_VERTEX_COUNT++;
                 }
-                else if(object == 6) // Right window
+                else if(object == 5) // Right window
                 {
                     RIGHT_WINDOW_VERTICES[RIGHT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     RIGHT_WINDOW_TEX_COORDS[RIGHT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     RIGHT_WINDOW_NORMALS[RIGHT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     RIGHT_WINDOW_VERTEX_COUNT++;
                 }
-                else if(object == 17) // Room
+                else if(object == 6) // Chão
                 {
-                    ROOM_VERTICES[ROOM_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    ROOM_TEX_COORDS[ROOM_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    ROOM_NORMALS[ROOM_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    ROOM_VERTEX_COUNT++;
+                    FLOOR_VERTICES[FLOOR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    FLOOR_TEX_COORDS[FLOOR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    FLOOR_NORMALS[FLOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    FLOOR_VERTEX_COUNT++;
                 }
-                else if(object == 25) // Mesa
+                else if(object == 7) // Mesa
                 {
                     MESA_VERTICES[MESA_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
                     MESA_TEX_COORDS[MESA_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
                     MESA_NORMALS[MESA_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
                     MESA_VERTEX_COUNT++;
+                }else if(object == 8) // Geladeira
+                {
+                    FREEZER_VERTICES[FREEZER_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    FREEZER_TEX_COORDS[FREEZER_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    FREEZER_NORMALS[FREEZER_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    FREEZER_VERTEX_COUNT++;
+                }else if(object == 9) // Caneca
+                {
+                    MUG_VERTICES[MUG_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    MUG_TEX_COORDS[MUG_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    MUG_NORMALS[MUG_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    MUG_VERTEX_COUNT++;
+                }else if(object == 10) // Prato
+                {
+                    PLATE_VERTICES[PLATE_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    PLATE_TEX_COORDS[PLATE_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    PLATE_NORMALS[PLATE_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    PLATE_VERTEX_COUNT++;
+                }else if(object == 11) // Ventilador
+                {
+                    FAN_VERTICES[FAN_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    FAN_TEX_COORDS[FAN_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    FAN_NORMALS[FAN_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    FAN_VERTEX_COUNT++;
+                }
+                else if(object == 12) // Quadro
+                {
+                    PAINTING_VERTICES[PAINTING_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    PAINTING_TEX_COORDS[PAINTING_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    PAINTING_NORMALS[PAINTING_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    PAINTING_VERTEX_COUNT++;
+                }
+                else if(object == 13) // Paredes
+                {
+                    WALLS_VERTICES[WALLS_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+                    WALLS_TEX_COORDS[WALLS_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+                    WALLS_NORMALS[WALLS_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+                    WALLS_VERTEX_COUNT++;
                 }
             }
         }
@@ -338,37 +419,67 @@ int load_obj(const char* path, int object)
 
 int load_all_objects()
 {
-    if(!load_obj("objects/portaPrincipal.obj", 2))
+    if(!load_obj("objects/portaPrincipal.obj", 1))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/portaSecundaria.obj", 3))
+    if(!load_obj("objects/portaSecundaria.obj", 2))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/cadeira.obj", 4))
+    if(!load_obj("objects/cadeira.obj", 3))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Janela1.obj", 5))
+    if(!load_obj("objects/Janela1.obj", 4))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Janela2.obj", 6))
+    if(!load_obj("objects/Janela2.obj", 5))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Quarto.obj", 17))
+    if(!load_obj("objects/chao.obj", 6))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/mesa.obj", 25))
+    if(!load_obj("objects/mesa.obj", 7))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/geladeira.obj", 8))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/caneca.obj", 9))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/prato.obj", 10))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/paletaVentilador.obj", 11))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/Quadro.obj", 12))
+    {
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+    if(!load_obj("objects/paredes.obj", 13))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
@@ -414,6 +525,14 @@ void load_all_textures()
 {
 	doors_tex_id = load_texture("textures/portas.jpg");
     windows_tex_id = load_texture("textures/janela.jpg");
+    mesa_tex_id = load_texture("textures/biro.jpg");
+    chair_tex_id = load_texture("textures/cadeira.jpg");
+    freezer_tex_id = load_texture("textures/freezer.jpg");    
+    painting_tex_id = load_texture("textures/bandeira.png");
+    fan_tex_id = load_texture("textures/ventilador.jpg");
+    floor_tex_id = load_texture("textures/chao.jpg");
+    walls_tex_id = load_texture("textures/quarto.jpg");
+
 }
 
 
@@ -432,9 +551,9 @@ void display()
     Vec3 u = up(&CAM);
     Vec3 eye = CAM.position;
     Vec3 center = {eye.x + fwd.x, eye.y + fwd.y, eye.z + fwd.z};
+    setup_lighting();
 
     gluLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, u.x, u.y, u.z);
-    setup_lighting();
 
     draw_grid(50);
 
@@ -503,20 +622,24 @@ void display()
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     
-    // Draw the room
+    // Draw the chão
+    glBindTexture(GL_TEXTURE_2D, floor_tex_id);
+    glPushMatrix();
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < ROOM_VERTEX_COUNT; i++)
+    for(i = 0; i < FLOOR_VERTEX_COUNT; i++)
     {
-        glNormal3f(ROOM_NORMALS[i].x , ROOM_NORMALS[i].y, ROOM_NORMALS[i].z);
-        glTexCoord2f(ROOM_TEX_COORDS[i].x, ROOM_TEX_COORDS[i].y);
-        glVertex3f(ROOM_VERTICES[i].x, ROOM_VERTICES[i].y, ROOM_VERTICES[i].z);
+        glNormal3f(FLOOR_NORMALS[i].x , FLOOR_NORMALS[i].y, FLOOR_NORMALS[i].z);
+        glTexCoord2f(FLOOR_TEX_COORDS[i].x, FLOOR_TEX_COORDS[i].y);
+        glVertex3f(FLOOR_VERTICES[i].x, FLOOR_VERTICES[i].y, FLOOR_VERTICES[i].z);
     }
     glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the mesa
-    
+    glBindTexture(GL_TEXTURE_2D, mesa_tex_id);
     glPushMatrix();
-    glTranslatef(1, 0.5, 0);
+    glTranslatef(1, -0.5, 0);
     glBegin(GL_TRIANGLES);
     for(i = 0; i < MESA_VERTEX_COUNT; i++)
     {
@@ -526,8 +649,10 @@ void display()
     }
     glEnd();
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
     
-    // Draw the chair in front of the door
+    // Draw the chair in front of the door (chair1)
+    glBindTexture(GL_TEXTURE_2D, chair_tex_id);
     glPushMatrix();
     glTranslatef(1, 0.5, -3);
     glBegin(GL_TRIANGLES);
@@ -539,8 +664,11 @@ void display()
     }
     glEnd();
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Draw the middle chair 
+
+    // Draw the middle chair (chair2)
+    glBindTexture(GL_TEXTURE_2D, chair_tex_id);
     glPushMatrix();
     glRotatef(-90, 0.0f, 1.0f, 0.0f);
     glTranslatef(0, 0, -3.5);
@@ -553,8 +681,10 @@ void display()
     }
     glEnd();
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Draw the chair next to the door
+    // Draw the chair next to the door (chair3)
+    glBindTexture(GL_TEXTURE_2D, chair_tex_id);
     glPushMatrix();
     glRotatef(180, 0.0f, 1.0f, 0.0f);
     glTranslatef(-1, 0.5, -3);
@@ -567,7 +697,142 @@ void display()
     }
     glEnd();
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
+    // Draw the freezer
+    glBindTexture(GL_TEXTURE_2D, freezer_tex_id);
+    glPushMatrix();
+    glTranslatef(14, 1, 6.75);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < FREEZER_VERTEX_COUNT; i++)
+    {
+        glNormal3f(FREEZER_NORMALS[i].x, FREEZER_NORMALS[i].y, FREEZER_NORMALS[i].z);
+        glTexCoord2f(FREEZER_TEX_COORDS[i].x, FREEZER_TEX_COORDS[i].y);
+        glVertex3f(FREEZER_VERTICES[i].x, FREEZER_VERTICES[i].y, FREEZER_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Draw the mug 1 of chair1
+    glPushMatrix();
+    glTranslatef(-1.5, 0.8, 0.5);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < MUG_VERTEX_COUNT; i++)
+    {
+        glNormal3f(MUG_NORMALS[i].x, MUG_NORMALS[i].y, MUG_NORMALS[i].z);
+        glTexCoord2f(MUG_TEX_COORDS[i].x, MUG_TEX_COORDS[i].y);
+        glVertex3f(MUG_VERTICES[i].x, MUG_VERTICES[i].y, MUG_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the mug 2 of chair2
+    glPushMatrix();
+    glTranslatef(0.6, 0.8, 1.3);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < MUG_VERTEX_COUNT; i++)
+    {
+        glNormal3f(MUG_NORMALS[i].x, MUG_NORMALS[i].y, MUG_NORMALS[i].z);
+        glTexCoord2f(MUG_TEX_COORDS[i].x, MUG_TEX_COORDS[i].y);
+        glVertex3f(MUG_VERTICES[i].x, MUG_VERTICES[i].y, MUG_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the mug 3 of chair3
+    glPushMatrix();
+    glTranslatef(-1.5, 0.8, 3.45);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < MUG_VERTEX_COUNT; i++)
+    {
+        glNormal3f(MUG_NORMALS[i].x, MUG_NORMALS[i].y, MUG_NORMALS[i].z);
+        glTexCoord2f(MUG_TEX_COORDS[i].x, MUG_TEX_COORDS[i].y);
+        glVertex3f(MUG_VERTICES[i].x, MUG_VERTICES[i].y, MUG_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+    
+    // Draw the plate 1 of chair1
+    glPushMatrix();
+    glTranslatef(2.7, 0.8, 0);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < PLATE_VERTEX_COUNT; i++)
+    {
+        glNormal3f(PLATE_NORMALS[i].x, PLATE_NORMALS[i].y, PLATE_NORMALS[i].z);
+        glTexCoord2f(PLATE_TEX_COORDS[i].x, PLATE_TEX_COORDS[i].y);
+        glVertex3f(PLATE_VERTICES[i].x, PLATE_VERTICES[i].y, PLATE_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the plate 2 of chair2
+    glPushMatrix();
+    glTranslatef(4, 0.8, 1.5);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < PLATE_VERTEX_COUNT; i++)
+    {
+        glNormal3f(PLATE_NORMALS[i].x, PLATE_NORMALS[i].y, PLATE_NORMALS[i].z);
+        glTexCoord2f(PLATE_TEX_COORDS[i].x, PLATE_TEX_COORDS[i].y);
+        glVertex3f(PLATE_VERTICES[i].x, PLATE_VERTICES[i].y, PLATE_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the plate 3 of chair3
+    glPushMatrix();
+    glTranslatef(2.7, 0.8, 3);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < PLATE_VERTEX_COUNT; i++)
+    {
+        glNormal3f(PLATE_NORMALS[i].x, PLATE_NORMALS[i].y, PLATE_NORMALS[i].z);
+        glTexCoord2f(PLATE_TEX_COORDS[i].x * 2, PLATE_TEX_COORDS[i].y);
+        glVertex3f(PLATE_VERTICES[i].x, PLATE_VERTICES[i].y, PLATE_VERTICES[i].z);
+    }
+    glEnd();
+    glPopMatrix();
+
+    // Draw the fan
+    glBindTexture(GL_TEXTURE_2D, fan_tex_id);
+    glPushMatrix();
+    glTranslatef(6, 8, 0);
+    // glRotatef(90, 0.0f, 1.0f, 0.0f);
+    glRotatef(fan_speed, 0.0f, 1.0f, 0.0f);
+    // glTranslatef(-1.220647, -2.604736, -2.619632);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < FAN_VERTEX_COUNT; i++)
+    {
+        glNormal3f(FAN_NORMALS[i].x * 0.5, FAN_NORMALS[i].y * 0.5, FAN_NORMALS[i].z * 0.5);
+        glTexCoord2f(FAN_TEX_COORDS[i].x * 0.5, FAN_TEX_COORDS[i].y * 0.5);
+        glVertex3f(FAN_VERTICES[i].x * 0.5, FAN_VERTICES[i].y * 0.5, FAN_VERTICES[i].z * 0.5);
+    }
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Draw the paiting
+    glBindTexture(GL_TEXTURE_2D, painting_tex_id);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < PAINTING_VERTEX_COUNT; i++)
+    {
+        glNormal3f(PAINTING_NORMALS[i].x, PAINTING_NORMALS[i].y, PAINTING_NORMALS[i].z);
+        glTexCoord2f(PAINTING_TEX_COORDS[i].x, PAINTING_TEX_COORDS[i].y);
+        glVertex3f(PAINTING_VERTICES[i].x, PAINTING_VERTICES[i].y, PAINTING_VERTICES[i].z);
+    }
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Draw the paiting
+    glBindTexture(GL_TEXTURE_2D, walls_tex_id);
+    glBegin(GL_TRIANGLES);
+    for(i = 0; i < WALLS_VERTEX_COUNT; i++)
+    {
+        glNormal3f(WALLS_NORMALS[i].x, WALLS_NORMALS[i].y, WALLS_NORMALS[i].z);
+        glTexCoord2f(WALLS_TEX_COORDS[i].x, WALLS_TEX_COORDS[i].y);
+        glVertex3f(WALLS_VERTICES[i].x, WALLS_VERTICES[i].y, WALLS_VERTICES[i].z);
+    }
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     glutSwapBuffers();
 }
@@ -585,7 +850,7 @@ void idle()
     main_door();
     side_door();
     windows();
-    // move_fan();
+    move_fan();
 
     // Lateral movement
     int move_right = KEYBOARD['d'] - KEYBOARD['a'];
@@ -740,13 +1005,13 @@ void windows()
     }
 }
 
-// void move_fan()
-// {
-//     if(fan_speed > 360)
-//         fan_speed = 0;
+void move_fan()
+{
+    if(fan_speed > 360)
+        fan_speed = 0;
     
-//     fan_speed += 3;
-// }
+    fan_speed += 1;
+}
 
 
 /*--------------------------------------------------------*/
